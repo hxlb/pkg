@@ -67,7 +67,7 @@ func (pe *ProviderError) Error() string {
 // The provider must be a function with a single output.
 // Register is mainly needed when calling Configure() to configure an object and create
 // new instances of the specified types.
-func (c *Conf) Register(name string, provider interface{}) error {
+func (c *Config) Register(name string, provider interface{}) error {
 	v := reflect.ValueOf(provider)
 	if v.Kind() != reflect.Func || v.Type().NumOut() != 1 {
 		return &ProviderError{v}
@@ -77,7 +77,7 @@ func (c *Conf) Register(name string, provider interface{}) error {
 }
 
 // Populate populate.
-func (c *Conf) Populate(v interface{}, key ...string) (err error) {
+func (c *Config) Populate(v interface{}, key ...string) (err error) {
 	defer func() {
 		if r := recover(); r != nil {
 			if _, ok := r.(runtime.Error); ok {
@@ -132,7 +132,7 @@ func indirect(v reflect.Value) reflect.Value {
 }
 
 // populate populate the value with the configuration.
-func (c *Conf) populate(v, config reflect.Value, key string) error {
+func (c *Config) populate(v, config reflect.Value, key string) error {
 	// get the concrete value, may allocate space if needed.
 	v = indirect(v)
 
@@ -163,7 +163,7 @@ func (c *Conf) populate(v, config reflect.Value, key string) error {
 }
 
 // populateArray
-func (c *Conf) populateArray(v, config reflect.Value, key string) error {
+func (c *Config) populateArray(v, config reflect.Value, key string) error {
 	vkind := v.Kind()
 
 	// nil interface
@@ -210,7 +210,7 @@ func (c *Conf) populateArray(v, config reflect.Value, key string) error {
 }
 
 // populateMap
-func (c *Conf) populateMap(v, config reflect.Value, key string) error {
+func (c *Config) populateMap(v, config reflect.Value, key string) error {
 	// map must have string kind
 	t := v.Type()
 	if v.IsNil() {
@@ -233,7 +233,7 @@ func (c *Conf) populateMap(v, config reflect.Value, key string) error {
 var typeKey = reflect.ValueOf("type")
 
 // populateStruct
-func (c *Conf) populateStruct(v, config reflect.Value, key string) error {
+func (c *Config) populateStruct(v, config reflect.Value, key string) error {
 	for _, k := range config.MapKeys() {
 		if k.String() == typeKey.String() {
 			continue
@@ -261,7 +261,7 @@ func (c *Conf) populateStruct(v, config reflect.Value, key string) error {
 }
 
 // populateInterface
-func (c *Conf) populateInterface(v, config reflect.Value, key string) error {
+func (c *Config) populateInterface(v, config reflect.Value, key string) error {
 	// nil interface
 	if v.NumMethod() == 0 {
 		v.Set(config)
@@ -293,7 +293,7 @@ func (c *Conf) populateInterface(v, config reflect.Value, key string) error {
 }
 
 // populateScalar
-func (c *Conf) populateScalar(v, config reflect.Value, key string) error {
+func (c *Config) populateScalar(v, config reflect.Value, key string) error {
 	if !config.IsValid() {
 		switch v.Kind() {
 		case reflect.Interface, reflect.Ptr, reflect.Map, reflect.Slice:

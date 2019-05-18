@@ -7,12 +7,12 @@ import (
 
 func TestConf(t *testing.T) {
 	c := New()
-	c.RegisterLoadFunc("json", loadJSON)
+	//c.RegisterLoadFunc("json", loadJSON)
 	c.Load("./app.json")
 	name := c.GetString("name")
 	equal(t, "config", name)
-	ext := c.Get("ext")
-	equal(t, map[string]interface{}{"email": "lcb123_2018@163.com", "author": "lcb123"}, ext)
+	//ext := c.Get("ext")
+	//equal(t, map[string]interface{}{"email": "lcb123_2018@163.com", "author": "lcb123"}, ext)
 	email := c.GetString("ext.email")
 	equal(t, "lcb123_2018@163.com", email)
 	version := c.GetFloat("version", 2.0)
