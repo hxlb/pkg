@@ -15,7 +15,7 @@ func init() {
 	fileName := "hzlb-srv.log"
 	syncWriter := zapcore.AddSync(&lumberjack.Logger{
 		Filename:  fileName,
-		MaxSize:   128, //MB
+		MaxSize:   1, //MB
 		LocalTime: true,
 		Compress:  true,
 	})
