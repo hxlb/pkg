@@ -19,7 +19,7 @@ var DefaultSeparator = "."
 var DefaultLoadFuncs = map[string]loadFunc{"json": loadJSON}
 
 // Conf conf
-type Conf struct {
+type Config struct {
 	Separator string
 	LoadFuncs map[string]loadFunc
 	types     map[string]reflect.Value
@@ -28,8 +28,8 @@ type Conf struct {
 }
 
 // New returns an instance of the Conf.
-func New() *Conf {
-	return &Conf{
+func New() *Config {
+	return &Config{
 		Separator: DefaultSeparator,
 		LoadFuncs: DefaultLoadFuncs,
 		types:     make(map[string]reflect.Value),
@@ -41,12 +41,12 @@ func New() *Conf {
 // like:
 // RegisterLoadFunc("toml", loadTOML)
 // RegisterLoadFunc("yaml", loadYAML)
-func (c *Conf) RegisterLoadFunc(typ string, fn loadFunc) {
+func (c *Config) RegisterLoadFunc(typ string, fn loadFunc) {
 	c.LoadFuncs[typ] = fn
 }
 
 // Load loads configuration data from one or multiple files.
-func (c *Conf) Load(files ...string) error {
+func (c *Config) Load(files ...string) error {
 	defer func() {
 		// Reset cache.
 		c.cache = make(map[string]interface{})
@@ -70,7 +70,7 @@ func (c *Conf) Load(files ...string) error {
 // if there is no matching file. The syntax of patterns is the same
 // as in Match. The pattern may describe hierarchical names such as
 // testdata/*.json (assuming the Separator is '/').
-func (c *Conf) LoadWithPattern(pattern string) error {
+func (c *Config) LoadWithPattern(pattern string) error {
 	files, err := filepath.Glob(pattern)
 	if err != nil {
 		return err
@@ -79,7 +79,7 @@ func (c *Conf) LoadWithPattern(pattern string) error {
 }
 
 // Set sets the configuration value at the specified path.
-func (c *Conf) Set(key string, val interface{}) error {
+func (c *Config) Set(key string, val interface{}) error {
 	if !c.store.IsValid() {
 		c.store = reflect.ValueOf(make(map[string]interface{}))
 		c.cache = make(map[string]interface{})
@@ -121,7 +121,7 @@ func (c *Conf) Set(key string, val interface{}) error {
 }
 
 // Get config
-func (c *Conf) Get(key string, def ...interface{}) interface{} {
+func (c *Config) Get(key string, def ...interface{}) interface{} {
 	var v interface{}
 	if len(def) > 0 {
 		v = def[0]
@@ -164,7 +164,7 @@ func (c *Conf) Get(key string, def ...interface{}) interface{} {
 }
 
 // GetString returns a string.
-func (c *Conf) GetString(key string, def ...string) string {
+func (c *Config) GetString(key string, def ...string) string {
 	var v string
 	if len(def) > 0 {
 		v = def[0]
@@ -173,7 +173,7 @@ func (c *Conf) GetString(key string, def ...string) string {
 }
 
 // GetInt returns an int
-func (c *Conf) GetInt(key string, def ...int) int {
+func (c *Config) GetInt(key string, def ...int) int {
 	var v int
 	if len(def) > 0 {
 		v = def[0]
@@ -182,7 +182,7 @@ func (c *Conf) GetInt(key string, def ...int) int {
 }
 
 // GetInt64 returns an int64
-func (c *Conf) GetInt64(key string, def ...int64) int64 {
+func (c *Config) GetInt64(key string, def ...int64) int64 {
 	var v int64
 	if len(def) > 0 {
 		v = def[0]
@@ -191,7 +191,7 @@ func (c *Conf) GetInt64(key string, def ...int64) int64 {
 }
 
 // GetFloat returns an float
-func (c *Conf) GetFloat(key string, def ...float64) float64 {
+func (c *Config) GetFloat(key string, def ...float64) float64 {
 	var v float64
 	if len(def) > 0 {
 		v = def[0]
@@ -200,7 +200,7 @@ func (c *Conf) GetFloat(key string, def ...float64) float64 {
 }
 
 // GetBool returns a bool
-func (c *Conf) GetBool(key string, def ...bool) bool {
+func (c *Config) GetBool(key string, def ...bool) bool {
 	var v bool
 	if len(def) > 0 {
 		v = def[0]
@@ -210,7 +210,7 @@ func (c *Conf) GetBool(key string, def ...bool) bool {
 
 // GetStore returns the complete configuration store.
 // Nil will be returned if the configuration has never been loaded before.
-func (c *Conf) GetStore() interface{} {
+func (c *Config) GetStore() interface{} {
 	if c.store.IsValid() {
 		return c.store.Interface()
 	}
@@ -226,7 +226,7 @@ func (c *Conf) GetStore() interface{} {
 // merge the corresponding values in C1 and C2 recursively.
 //
 // Note that this method will clear any existing configuration data.
-func (c *Conf) SetStore(data ...interface{}) {
+func (c *Config) SetStore(data ...interface{}) {
 	c.store = reflect.Value{}
 	for _, d := range data {
 		c.store = merge(c.store, reflect.ValueOf(d))
