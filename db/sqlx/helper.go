@@ -15,7 +15,7 @@ func MustDB(name ...string) *sqlx.DB {
 	}
 	db, ok := dbService.List[name[0]]
 	if !ok {
-		log.Panicf("[sqlx] the database engine `%s` is not configured", name[0])
+		log.Logger("sqlx").Panic(name[0])
 	}
 	return db
 }
@@ -42,7 +42,7 @@ func MustConfig(name ...string) DBConfig {
 	}
 	config, ok := dbConfigs[name[0]]
 	if !ok {
-		log.Panicf("[sqlx] the database engine `%s` is not configured", name[0])
+		log.Logger("sqlx").Panic(name[0])
 	}
 	return *config
 }
