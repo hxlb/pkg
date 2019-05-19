@@ -31,7 +31,7 @@ func Init(serviceName string) *zap.Logger {
 // NewLogger 新建日志
 func NewLogger(srvName string) *zap.Logger {
 
-	directory := path.Join("./log", srvName)
+	directory := path.Join("./", srvName+"_log")
 	writers := []zapcore.WriteSyncer{newRollingFile(directory)}
 	writers = append(writers, os.Stdout)
 	logger, dyn := newZapLogger(true, zapcore.NewMultiWriteSyncer(writers...))
