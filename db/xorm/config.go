@@ -28,7 +28,7 @@ type DBConfig struct {
 
 // default constant
 const (
-	DBCONFIG_FILE  = "./conf/xorm.ini"
+	DBCONFIG_FILE  = "./config/xorm.ini"
 	DATABASE_DIR   = "database/"
 	DEFAULTDB_NAME = "default"
 )

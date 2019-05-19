@@ -21,7 +21,7 @@ type DBConfig struct {
 const (
 	DATABASE_DIR   = "database/"
 	DEFAULTDB_NAME = "default"
-	DBCONFIG_FILE  = "./conf/gorm.ini"
+	DBCONFIG_FILE  = "./config/gorm.ini"
 )
 
 var (

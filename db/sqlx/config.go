@@ -22,7 +22,7 @@ type DBConfig struct {
 const (
 	DATABASE_DIR   = "database/"
 	DEFAULTDB_NAME = "default"
-	DBCONFIG_FILE  = "./conf/sqlx.ini"
+	DBCONFIG_FILE  = "./config/sqlx.ini"
 )
 
 var (
