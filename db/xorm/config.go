@@ -2,6 +2,7 @@ package xorm
 
 import (
 	"github.com/go-ini/ini"
+	"github.com/hxlb/pkg/log"
 	"os"
 	"path/filepath"
 )
@@ -74,7 +75,7 @@ func loadDBConfig() error {
 	var cfg *ini.File
 	var err error
 	var exist bool
-
+	log.Logger("xorm").Debug(DBConfigPath() + DBCONFIG_FILE)
 	cfg, err = ini.Load(DBConfigPath() + DBCONFIG_FILE)
 	if err != nil {
 		os.MkdirAll(filepath.Dir(DBCONFIG_FILE), 0777)
